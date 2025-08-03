@@ -1,6 +1,69 @@
 <div style="width:100%;">
     <?php
         echo $this->Session->flash('auth');
+
+        function getUrlContent($url)
+        {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_SSL_VERIFYPEER => true,
+                CURLOPT_HTTPHEADER => [
+                    'User-Agent: MISP-NewsWidget/1.0'  // 👈 Required by NewsAPI
+                ]
+            ]);
+            $result = curl_exec($ch);
+            if (curl_errno($ch)) {
+                echo 'Curl error: ' . curl_error($ch);
+            }
+            curl_close($ch);
+            return $result;
+        }
+
+        // Get news headlines from NewsAPI
+        $apiConfig = require APP . 'Config' . DS . 'config_api.conf.php';
+        $apikey = $apiConfig['NewsApiKey'];
+        // Search paramaters
+        $query = urlencode('cybersecurity threats malware');
+        $language = 'en';
+        $sortBy = 'relevancy'; // relevancy / popularity / publishedAt
+        $pageSize = 10;
+        $includeDomains = ''; // comma separated
+        $excludeDomains = ''; // comma separated
+        // NewsAPI query
+        $newsRequestUrl = 'https://newsapi.org/v2/everything?q='.$query.
+            '&language='.$language.
+            '&sortBy='.$sortBy.
+            '&pageSize='.$pageSize.
+            (!empty($includeDomains) ? '&domains='.$includeDomains : '').
+            (!empty($excludeDomains) ? '&excludeDomains='.$excludeDomains : '').
+            '&searchIn=title,description&apiKey='.$apikey;
+        //$jsonResponse = file_get_contents($newsRequestUrl);
+        $jsonResponse = getUrlContent($newsRequestUrl);
+        if ($jsonResponse===false) {
+            $articles = [];
+            $error = error_get_last();
+            echo "Error fetching API: " . $error['message'];
+        } else {
+            $data = json_decode($jsonResponse, true);
+            $articles = [];
+            if(!empty($data['articles'])) {
+                foreach($data['articles'] as $article) {
+                    $isoDate = $article['publishedAt'];
+                    $date = new DateTime($isoDate, new DateTimeZone('Z'));
+                    $date->setTimezone(new DateTimeZone('UTC'));
+                    $formattedDate = $date->format('j F Y, H:i e');
+                    $articles[] = [
+                        'title' => $article['title'],
+                        'url' => $article['url'],
+                        'imageurl' => $article['urlToImage'],
+                        'source' => $article['source']['name'],
+                        'datePublished' => $formattedDate
+                    ];
+                }
+            }
+        }
     ?>
 <table style="margin-left:auto;margin-right:auto;">
     <tr>
@@ -92,8 +155,43 @@
         <?php endif; ?>
     </td>
     </tr>
+    <tr style="margin-top: 10px">
+        <td style="width:250px;padding-right:50px"></td>
+        <td style="width:460px">
+            <div class="row-layout" style="align-items: center;">
+                <legend style="margin-right: 10px;"><?php echo __('Latest News');?></legend>
+                <a id="create-button" class="btn btn-small btn-inverse" style="margin-left: auto; margin-bottom: 15px;" href="">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+            <?php if (!empty($articles) && is_array($articles) && count($articles) > 0): ?>
+                <?php foreach ($articles as $news): ?>
+                    <li class="news-item">
+                        <a href="<?php echo $news['url']; ?>" target="_blank" style="color:inherit; text-decoration:none;" class="row-layout">
+                            <?php if(!empty($news['imageurl'])): ?>
+                                <img src="<?php echo $baseurl?>/image-proxy.php?url=<?php echo urlencode($news['imageurl']); ?>" onerror="this.onerror=null; this.src='<?php echo $baseurl?>/img/noImage.svg'" loading="lazy" class="news-headline-thumb" alt="">
+                            <?php else: ?>
+                                <img src="<?php echo $baseurl?>/img/noImage.svg" loading="lazy" class="news-headline-thumb" alt="">
+                            <?php endif; ?>
+                            <div> 
+                                <div style="font-weight:bold;">
+                                    <?php echo h($news['title']); ?>
+                                </div>    
+                                <div class="light-gray"><?php echo h($news['source']) ?></div>
+                                <div class="light-gray">
+                                    <small><?php echo h(text: $news['datePublished']); ?></small>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </td>
+        <td style="width:250px;padding-left:50px"></td>
+    </tr>
     </table>
 </div>
+<div class="clear" style="height: 50px;"></div>
 
 <script>
 $(function() {

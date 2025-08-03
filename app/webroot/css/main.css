@@ -2977,3 +2977,36 @@ Query builder
         background-color: #d208f4;
     }
 }
+
+.row-layout {
+    display: flex;
+    flex-direction: row;
+}
+
+.news-item {
+    list-style-type: none;
+    margin-bottom: 10px;
+    padding: 6px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.1);
+}
+
+.news-item:hover{
+    box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.2);
+    transform: scale(1.01);
+}
+
+.news-headline-thumb {
+    width: 75px;
+    height: 75px;
+    margin-right:10px;
+    object-fit:cover;
+    flex-shrink: 0;
+    align-self: center;
+    border: 0px;
+}
+
+.light-gray {
+    color:hsl(0deg, 0%, 50%)
+}
