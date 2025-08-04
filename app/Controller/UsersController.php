@@ -1213,6 +1213,11 @@ class UsersController extends AppController
     public function login()
     {
         $oldHash = false;
+
+        $this->loadModel('NewsHeadline');
+        $newsArticles = $this->NewsHeadline->fetchHeadlines();
+        $this->set('newsArticles', $newsArticles);
+
         if ($this->request->is(['post', 'put'])) {
             $this->Bruteforce = ClassRegistry::init('Bruteforce');
             if (!empty($this->request->data['User']['email'])) {
