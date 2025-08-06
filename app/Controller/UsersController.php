@@ -1214,9 +1214,21 @@ class UsersController extends AppController
     {
         $oldHash = false;
 
+        // load news articles 
         $this->loadModel('NewsHeadline');
         $newsArticles = $this->NewsHeadline->fetchHeadlines();
         $this->set('newsArticles', $newsArticles);
+
+        // load event headlines
+        $this->loadModel('Event');
+        $eventHeadlines = $this->Event->find('all', [
+            'conditions' => ['Event.published' => 1],
+            'order' => ['Event.date' => 'DESC'],
+            'limit' => 10,
+            'fields' => ['Event.info', 'Event.threat_level_id', 'Event.date']
+        ]);
+        $this->set('eventHeadlines', $eventHeadlines);
+        
 
         if ($this->request->is(['post', 'put'])) {
             $this->Bruteforce = ClassRegistry::init('Bruteforce');

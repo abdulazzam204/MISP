@@ -96,70 +96,207 @@
                 <?php endif; ?>
             </td>
         </tr>
+
+        <!-- Display news and events  -->
         <tr style="margin-top: 10px">
             <td style="width:250px;padding-right:50px"></td>
             <td style="width:460px">
-                <div class="row-layout" style="align-items: center;">
-                    <legend style="margin-right: 10px;"><?php echo __('Latest News'); ?></legend>
-                    <a id="create-button" class="btn btn-small btn-inverse"
-                        style="margin-left: auto; margin-bottom: 15px;" href="">
-                        <i class="fas fa-cog"></i>
-                    </a>
+                <div class='row-layout' style="margin-bottom: 10px;">
+                    <div id="news-button" class="btn btn-small btn-inverse chosen" style="margin-right: 5px">Latest News</div>
+                    <div id="events-button" class="btn btn-small btn-inverse" style="">Latest Events</div>
+                    <div id="news-settings-button" class="btn btn-small btn-inverse"
+                            style="margin-left: auto;">
+                            <i class="fas fa-cog"></i></div>
+                    <div id="event-settings-button" class="btn btn-small btn-inverse"
+                            style="margin-left: auto; display: none;">
+                            <i class="fas fa-cog"></i></div>
                 </div>
-                
-                <?php if (!empty($newsArticles) && is_array($newsArticles) && count($newsArticles) > 0): ?>
-                    <?php foreach ($newsArticles as $news): ?>
-                        <li class="news-item">
-                            <a href="<?php echo $news['url']; ?>" target="_blank" style="color:inherit; text-decoration:none;"
-                                class="row-layout">
-                                <?php if (!empty($news['imageurl'])): ?>
-                                    <img src="<?php echo $baseurl ?>/image-proxy.php?url=<?php echo urlencode($news['imageurl']); ?>"
-                                        onerror="this.onerror=null; this.src='<?php echo $baseurl ?>/img/noImage.svg'" loading="lazy"
-                                        class="news-headline-thumb" alt="">
-                                <?php else: ?>
-                                    <img src="<?php echo $baseurl ?>/img/noImage.svg" loading="lazy" class="news-headline-thumb"
-                                        alt="">
-                                <?php endif; ?>
-                                <div>
-                                    <div style="font-weight:bold;">
-                                        <?php echo h($news['title']); ?>
+                <div id="news-list">
+                    <?php if (!empty($newsArticles) && is_array($newsArticles) && count($newsArticles) > 0): ?>
+                        <ul style="margin: 0 0 0 0;">
+                        <?php foreach ($newsArticles as $news): ?>
+                            <li class="news-item">
+                                <a href="<?php echo $news['url']; ?>" target="_blank" style="color:inherit; text-decoration:none;"
+                                    class="row-layout">
+                                    <?php if (!empty($news['imageurl'])): ?>
+                                        <img src="<?php echo $baseurl ?>/image-proxy.php?url=<?php echo urlencode($news['imageurl']); ?>"
+                                            onerror="this.onerror=null; this.src='<?php echo $baseurl ?>/img/noImage.svg'"
+                                            loading="lazy" class="news-headline-thumb" alt="">
+                                    <?php else: ?>
+                                        <img src="<?php echo $baseurl ?>/img/noImage.svg" loading="lazy" class="news-headline-thumb"
+                                            alt="">
+                                    <?php endif; ?>
+                                    <div>
+                                        <div style="font-weight:bold;">
+                                            <?php echo h($news['title']); ?>
+                                        </div>
+                                        <div class="light-gray"><?php echo h($news['source']) ?></div>
+                                        <div class="light-gray">
+                                            <small><?php echo h(text: $news['datePublished']); ?></small>
+                                        </div>
                                     </div>
-                                    <div class="light-gray"><?php echo h($news['source']) ?></div>
-                                    <div class="light-gray">
-                                        <small><?php echo h(text: $news['datePublished']); ?></small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-
-                <!--
-                <div>
-                    <script>
-                        fetch('/news_headlines/fetch').then(response => response.json()).
-                        then(data => {
-                            const container = document.getElementById('news_headlines');
-                            data.forEach(news => {
-                                const item = document.createElement('div');
-                                item.classList.add('news-item');
-                                item.innerHTML = `
-                                    <img src="${news.imageurl}" class="news-headline-thumb" alt="">
-                                    <a href="${news.url}" target="_blank">${news.title}</a><br>
-                                    <small>${news.source} - ${news.datePublished}</small>
-                                `;
-                                container.appendChild(item);
-                            });
-                        });
-                    </script>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
                 </div>
-                                -->
-            </td>
+                <div id='events-list' style="display:none;">
+                    <?php if (!empty($eventHeadlines) && is_array($eventHeadlines)) : ?> 
+                        <ul style="margin: 0 0 0 0;">
+                        <?php foreach ($eventHeadlines as $eventHeadline): ?>
+                            <li class='event-item'>
+                                <div style='font-weight: bold'><?php echo $eventHeadline['Event']['info'] ?></div>
+                                <div>Threat Level: <?php switch ($eventHeadline['Event']['threat_level_id']) {
+                                    case 1: echo 'High'; break;
+                                    case 2: echo 'Medium'; break;
+                                    case 3: echo 'Low'; break; 
+                                    case 4: echo 'Undefined'; break;
+                                } ?></div>
+                                <div class='light-gray'>
+                                    <small><?php echo h($eventHeadline['Event']['date']) ?></small>
+                            </li>
+                        <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
             <td style="width:250px;padding-left:50px"></td>
         </tr>
     </table>
 </div>
 <div class="clear" style="height: 50px;"></div>
+
+<!-- Modal for News API Settings -->
+<div id="news-settings-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>News Article Settings</h3>
+        <br>
+        <form id="news-settings-form">
+            <label style="margin-bottom: 0px;">Topics:
+                <input type="text" name="query" value="<?php echo Configure::read('NewsSettings.query'); ?>"
+                    style="margin-bottom: 0px;">
+            </label>
+            <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">Keywords or
+                    phrases of topics. Also allows the use of logical operators ( e.g : +cybersecurity -stocks "cyber
+                    attacks" malware )</small></div>
+            <br>
+            <?php
+                $currentLang = Configure::read('NewsSettings.language');
+                $languages = ['ar' => 'Arabic','de' => 'German','en' => 'English','es' => 'Spanish','fr' => 'French','he' => 'Hebrew','it' => 'Italian','nl' => 'Dutch','no' => 'Norwegian','pt' => 'Portuguese','ru' => 'Russian','sv' => 'Swedish','ud' => 'Urdu','zh' => 'Chinese'];
+            ?>
+            <label style="margin-bottom: 0px;">Language:
+                <select name="language">
+                    <?php foreach ($languages as $code => $name): ?>
+                        <option value="<?php echo h($code); ?>" <?php echo ($code === $currentLang) ? 'selected' : ''; ?>>
+                            <?php echo h($name); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+            <br>
+            <label>Sort By:
+                <?php $currentSort = Configure::read('NewsSettings.sortBy'); ?>
+                <select name="sortBy">
+                    <option value="publishedAt" <?php echo $currentSort === 'publishedAt' ? 'selected' : ''; ?>>Published At</option>
+                    <option value="relevancy" <?php echo $currentSort === 'relevancy' ? 'selected' : ''; ?>>Relevancy
+                    </option>
+                    <option value="popularity" <?php echo $currentSort === 'popularity' ? 'selected' : ''; ?>>Popularity
+                    </option>
+                </select>
+            </label><br>
+            <label>Page Size:
+                <input type="number" name="pageSize" value="10">
+            </label><br>
+            <label style="margin-bottom: 0px;">Domains:
+                <input type="text" name="includeDomains" placeholder="example.com,another.com"
+                    value='<?php echo Configure::read('NewsSettings.includeDomains'); ?>' style="margin-bottom: 0px;">
+            </label>
+            <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">A
+                    comma-seperated string of news domains (eg bbc.co.uk, techcrunch.com, engadget.com) to restrict the
+                    search to</small></div>
+            <br>
+            <label style="margin-bottom: 0px;">Exclude Domains:
+                <input type="text" name="excludeDomains" placeholder="spam.com,irrelevant.com"
+                    value='<?php echo Configure::read('NewsSettings.excludeDomains'); ?>' style="margin-bottom: 0px;">
+            </label>
+            <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">A
+                    comma-seperated string of domains (eg bbc.co.uk, techcrunch.com, engadget.com) to remove from the
+                    results.</small></div>
+            <br>
+            <button type="submit" class="btn btn-small btn-inverse">Save</button>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var btnEvents = document.getElementById("events-button");
+        var btnNews = document.getElementById("news-button");
+        var newsList = document.getElementById("news-list");
+        var eventsList = document.getElementById("events-list");
+
+        var modal = document.getElementById("news-settings-modal");
+        var btnNewsSetting = document.getElementById("news-settings-button");
+        var btnEventSetting = document.getElementById("event-settings-button");
+        var span = document.getElementsByClassName("close")[0];
+
+        btnEvents.onclick = function () {
+            newsList.style.display = "none";
+            eventsList.style.display = "block";
+            btnNews.classList.remove("chosen");
+            btnEvents.classList.add("chosen");
+            btnEventSetting.style.display = "block";
+            btnNewsSetting.style.display = "none";
+        }
+
+        btnNews.onclick = function () {
+            newsList.style.display = "block";
+            eventsList.style.display = "none";
+            btnNews.classList.add("chosen");
+            btnEvents.classList.remove("chosen");            
+            btnEventSetting.style.display = "none";
+            btnNewsSetting.style.display = "block";
+        }
+
+        btnNewsSetting.onclick = function () {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.getElementById('news-settings-form').onsubmit = function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('/news_headlines/saveSettings', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Settings saved!');
+                    modal.style.display = "none";
+                    location.reload(); // Optionally reload to apply new settings
+                } else {
+                    alert('Failed to save settings: ' + (data.error || 'Unknown error'));
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving settings.');
+            });
+        };
+
+    });
+</script>
 
 <script>
     $(function () {

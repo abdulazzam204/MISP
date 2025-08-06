@@ -4,14 +4,10 @@ App::uses('AppModel','Model');
 class NewsHeadline extends AppModel {
     public $useTable = false;
 
-    /* query settings, will be replaced with config file
-    private $query = urlencode('cybersecurity OR threats OR malware');
-    private $language = 'en';
-    private $sortBy = 'relevancy'; // relevancy / popularity / publishedAt
-    private $pageSize = 10;
-    private $includeDomains = ''; // comma separated
-    private $excludeDomains = 'etfdailynews.com'; // comma separated
-    */
+    //private $newsSettings = require APP . 'Config' . DS . 'config_news.conf.php';
+    //private $queryParams = this->$newsSettings['NewsSettings'];
+
+
     private function getUrlContent($url)
     {
         $ch = curl_init($url);
@@ -34,12 +30,12 @@ class NewsHeadline extends AppModel {
     // returns associative array of articles
     public function fetchHeadlines()
     {
-        $query = urlencode('cybersecurity OR threats OR malware');
-        $language = 'en';
-        $sortBy = 'relevancy'; // relevancy / popularity / publishedAt
-        $pageSize = 10;
-        $includeDomains = ''; // comma separated
-        $excludeDomains = 'etfdailynews.com'; // comma separated
+        $query = urlencode(Configure::read('NewsSettings.query'));
+        $language = Configure::read('NewsSettings.language');
+        $sortBy = Configure::read('NewsSettings.sortBy'); // relevancy / popularity / publishedAt
+        $pageSize = Configure::read('NewsSettings.pageSize');
+        $includeDomains = Configure::read('NewsSettings.includeDomains'); // comma separated
+        $excludeDomains = Configure::read('NewsSettings.excludeDomains'); // comma separated
         // API Key
         $apiConfig = require APP . 'Config' . DS . 'config_api.conf.php';
         $apikey = $apiConfig['NewsApiKey'];
