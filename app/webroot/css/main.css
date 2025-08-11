@@ -3027,7 +3027,7 @@ Query builder
     color:hsl(0deg, 0%, 50%)
 }
 
-.modal {
+.modal.background {
     position: fixed;
     z-index: 999;
     padding-top: 100px;

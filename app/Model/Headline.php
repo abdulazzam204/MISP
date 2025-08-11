@@ -1,7 +1,7 @@
 <?php
 App::uses('AppModel','Model');
 
-class NewsHeadline extends AppModel {
+class Headline extends AppModel {
     public $useTable = false;
 
     //private $newsSettings = require APP . 'Config' . DS . 'config_news.conf.php';

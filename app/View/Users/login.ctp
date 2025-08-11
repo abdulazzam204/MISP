@@ -167,7 +167,7 @@
 <div class="clear" style="height: 50px;"></div>
 
 <!-- Modal for News API Settings -->
-<div id="news-settings-modal" class="modal" style="display:none;">
+<div id="news-settings-modal" class="modal background" style="display:none;">
     <div class="modal-content">
         <span class="close">&times;</span>
         <h3>News Article Settings</h3>

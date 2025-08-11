@@ -1215,8 +1215,8 @@ class UsersController extends AppController
         $oldHash = false;
 
         // load news articles 
-        $this->loadModel('NewsHeadline');
-        $newsArticles = $this->NewsHeadline->fetchHeadlines();
+        $this->loadModel('Headline');
+        $newsArticles = $this->Headline->fetchHeadlines();
         $this->set('newsArticles', $newsArticles);
 
         // load event headlines
