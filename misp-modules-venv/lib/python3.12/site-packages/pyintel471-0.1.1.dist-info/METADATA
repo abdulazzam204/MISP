@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: pyintel471
+Version: 0.1.1
+Summary: Python client for Intel471
+Home-page: https://github.com/MISP/PyIntel471
+Author: Raphaël Vinot
+Author-email: raphael.vinot@circl.lu
+Maintainer: Raphaël Vinot
+License: UNKNOWN
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Console
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Telecommunications Industry
+Classifier: Intended Audience :: Information Technology
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Security
+Classifier: Topic :: Internet
+
+UNKNOWN
+
+

@@ -1,0 +1,3 @@
+[console_scripts]
+pssl=bin.pssl:main
+
