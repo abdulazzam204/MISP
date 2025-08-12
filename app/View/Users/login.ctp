@@ -174,7 +174,7 @@
         <br>
         <form id="news-settings-form">
             <label style="margin-bottom: 0px;">Topics:
-                <input type="text" name="query" value="<?php echo Configure::read('NewsSettings.query'); ?>"
+                <input type="text" name="query" value="<?php echo $headlineSetting['query']; ?>"
                     style="margin-bottom: 0px;">
             </label>
             <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">Keywords or
@@ -182,7 +182,7 @@
                     attacks" malware )</small></div>
             <br>
             <?php
-                $currentLang = Configure::read('NewsSettings.language');
+                $currentLang = $headlineSetting['language'];
                 $languages = ['ar' => 'Arabic','de' => 'German','en' => 'English','es' => 'Spanish','fr' => 'French','he' => 'Hebrew','it' => 'Italian','nl' => 'Dutch','no' => 'Norwegian','pt' => 'Portuguese','ru' => 'Russian','sv' => 'Swedish','ud' => 'Urdu','zh' => 'Chinese'];
             ?>
             <label style="margin-bottom: 0px;">Language:
@@ -196,7 +196,7 @@
             </label>
             <br>
             <label>Sort By:
-                <?php $currentSort = Configure::read('NewsSettings.sortBy'); ?>
+                <?php $currentSort = $headlineSetting['sortBy']; ?>
                 <select name="sortBy">
                     <option value="publishedAt" <?php echo $currentSort === 'publishedAt' ? 'selected' : ''; ?>>Published At</option>
                     <option value="relevancy" <?php echo $currentSort === 'relevancy' ? 'selected' : ''; ?>>Relevancy
@@ -210,7 +210,7 @@
             </label><br>
             <label style="margin-bottom: 0px;">Domains:
                 <input type="text" name="includeDomains" placeholder="example.com,another.com"
-                    value='<?php echo Configure::read('NewsSettings.includeDomains'); ?>' style="margin-bottom: 0px;">
+                    value='<?php echo $headlineSetting['includeDomains']; ?>' style="margin-bottom: 0px;">
             </label>
             <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">A
                     comma-seperated string of news domains (eg bbc.co.uk, techcrunch.com, engadget.com) to restrict the
@@ -218,7 +218,7 @@
             <br>
             <label style="margin-bottom: 0px;">Exclude Domains:
                 <input type="text" name="excludeDomains" placeholder="spam.com,irrelevant.com"
-                    value='<?php echo Configure::read('NewsSettings.excludeDomains'); ?>' style="margin-bottom: 0px;">
+                    value='<?php echo $headlineSetting['excludeDomains']; ?>' style="margin-bottom: 0px;">
             </label>
             <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">A
                     comma-seperated string of domains (eg bbc.co.uk, techcrunch.com, engadget.com) to remove from the

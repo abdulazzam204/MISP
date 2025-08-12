@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('HeadlineConfig','Config');
 
 /**
  * @property User $User
@@ -1218,6 +1219,12 @@ class UsersController extends AppController
         $this->loadModel('Headline');
         $newsArticles = $this->Headline->fetchHeadlines();
         $this->set('newsArticles', $newsArticles);
+
+        // load news config
+        //require APP . 'Config' . DS . 'headline.php';
+        $headlineCfg = new HeadlineConfig();
+        $headlineSetting = $headlineCfg->headlineConfig;
+        $this->set('headlineSetting', $headlineSetting);
 
         // load event headlines
         $this->loadModel('Event');

@@ -100,6 +100,7 @@ app/Lib/EventWarning/Custom/*
 /app/Config/core.php
 /app/Config/config.php
 /app/Config/config_api.conf.php
+/tools/pull-feeds/keys.py
 /app/Config/hmac_key.php
 /app/Console/Command/training.json
 /app/Lib/cakephp
