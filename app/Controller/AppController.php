@@ -108,6 +108,17 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
+
+        $publicActions = [
+            'NewsHeadlines' => ['saveSettings', 'test'], // add more if needed
+        ];
+        $controller = strtolower($this->request->params['controller']);
+        $action = strtolower($this->request->params['action']);
+        if (isset($publicActions[$controller]) && in_array($action, $publicActions[$controller])) {
+            $this->Auth->allow($action);
+        }
+
+
         if (Configure::read('MISP.system_setting_db')) {
             App::uses('SystemSetting', 'Model');
             SystemSetting::setGlobalSetting();

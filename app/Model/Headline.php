@@ -30,12 +30,16 @@ class Headline extends AppModel {
     // returns associative array of articles
     public function fetchHeadlines()
     {
-        $query = urlencode(Configure::read('NewsSettings.query'));
-        $language = Configure::read('NewsSettings.language');
-        $sortBy = Configure::read('NewsSettings.sortBy'); // relevancy / popularity / publishedAt
-        $pageSize = Configure::read('NewsSettings.pageSize');
-        $includeDomains = Configure::read('NewsSettings.includeDomains'); // comma separated
-        $excludeDomains = Configure::read('NewsSettings.excludeDomains'); // comma separated
+        // Headline config
+        require APP . 'Config' . DS . 'headline.php';
+        $config = new HeadlineConfig();
+        $headlineConfig = $config->headlineConfig;
+        $query = urlencode($headlineConfig['query']);
+        $language = $headlineConfig['language'];
+        $sortBy = $headlineConfig['sortBy']; // relevancy / popularity / publishedAt
+        $pageSize = $headlineConfig['pageSize'];
+        $includeDomains = $headlineConfig['includeDomains']; // comma separated
+        $excludeDomains = $headlineConfig['excludeDomains']; // comma separated
         // API Key
         $apiConfig = require APP . 'Config' . DS . 'config_api.conf.php';
         $apikey = $apiConfig['NewsApiKey'];

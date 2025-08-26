@@ -37,6 +37,9 @@
 	Router::connect('/logs/admin_index/*', array('controller' => 'logs', 'action' => 'index', 'admin' => true));
 	Router::connect('/regexp/admin_index/*', array('controller' => 'regexp', 'action' => 'index', 'admin' => true));
 
+	Router::connect('/headlines/saveSettings', array('controller' => 'headlines', 'action' => 'saveSettings'));
+	Router::connect('/headlines/test', array('controller' => 'headlines', 'action' => 'test'));
+
 	// Activate REST
 	Router::mapResources(array('events', 'attributes'));
 	Router::parseExtensions('xml', 'json', 'csv');
