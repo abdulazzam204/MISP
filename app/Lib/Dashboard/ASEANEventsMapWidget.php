@@ -7,12 +7,12 @@ class ASEANEventsMapWidget {
     public $width = 5;
     public $height = 10;
     public $params = array(
-        //'event_info' => 'World map based on the countries with infections.',
-        //'type' => 'Type of data used for the widget (confirmed, death, recovered).',
-        //'logarithmic' => 'Use a log10 scale for the graph (set via 0/1).'
+        'start_date' => 'Start date of events to look for, expressed in Y-m-d format (e.g. 2012-10-01)',
     );
     public $description = 'Widget mapping cyber threats within ASEAN countries and Japan.';
-    public $placeholder = '';
+    public $placeholder = '{
+    "start_date": "2015-01-01"
+}';
 
     public $allowedTagsCountryCode = [
         //'misp-galaxy:region=\"035 - South-eastern Asia\"' => ['ID','BN','KH','LA','MY','MM','PH','SG','TH','VN'],
@@ -31,13 +31,27 @@ class ASEANEventsMapWidget {
 
     public $aseanCountryCodes = ['ID','BN','KH','LA','MY','MM','PH','SG','TH','VN'];
 
+    private function timeConditions($options)
+    {
+        if (!empty($options['start_date'])) {
+            $condition = strtotime($options['start_date']);
+        } else {
+            $condition = strtotime('2012-10-01');
+        }
+        $datetime = new DateTime();
+        $datetime->setTimestamp($condition);
+        return $datetime->format('Y-m-d');
+    }
+
     public function handler($user, $options = array()) {
         $this->Event = ClassRegistry::init('Event');
         
         # fetch events (events that aren't tagged with block-or-filter-list tag)
+        $timeCondition = $this->timeConditions($options);
         $params = [
             'tags' => ['!osint:source-type="block-or-filter-list"'],
-            'order' => 'id'
+            'from' => $timeCondition,
+            'order' => 'id',
         ];
         $eventIds = $this->Event->filterEventIds($user, $params);
         $events = $this->Event->fetchEvent($user, ['idList' => $eventIds, 'includeAllTags' => true]);

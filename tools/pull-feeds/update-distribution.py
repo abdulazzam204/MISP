@@ -1,18 +1,14 @@
-#!/usr/bin/env python3
 from pymisp import PyMISP
 import urllib3, pprint
 from keys import misp_url, misp_key
 
-# --- CONFIGURE THESE ---
 MISP_VERIFYCERT = False       # change to True if using valid SSL
 
-# --- INIT ---
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 misp = PyMISP(misp_url, misp_key, MISP_VERIFYCERT)
 org_name = 'abuse.ch'
 tag = 'osint:source-type="block-or-filter-list"'
 
-# --- SEARCH EVENTS FROM abuse.ch ---
 events = misp.search_index(tags= ['osint:source-type="block-or-filter-list"'], org= f'!{org_name}', pythonify=True)
 
 print(f"Found {len(events)} events with tag {tag}")

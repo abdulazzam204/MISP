@@ -11,7 +11,7 @@ class AseanEventEvolutionLineWidget
     public $autoRefreshDelay = false;
     public $params = [
         'start_date' => 'Start date, expressed in Y-m-d format (e.g. 2012-10-01)',
-        'cumulative' => '(default: 1), should the data counted cumulatively over time. (0/1)',
+        'cumulative' => 'Should the data be counted cumulatively over time. (0/1, default = 1)',
     ];
 
     public $placeholder = '{

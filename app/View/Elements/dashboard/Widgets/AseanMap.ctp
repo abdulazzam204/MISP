@@ -58,8 +58,8 @@
             },
             focusOn: {
                 x: 0.75, // X-coordinate of the center point (0 to 1, relative to map)
-                y: 0.55, // Y-coordinate of the center point (0 to 1, relative to map)
-                scale: 4 // Initial zoom level (e.g., 2 for double zoom)
+                y: 0.545, // Y-coordinate of the center point (0 to 1, relative to map)
+                scale: 3.5 // Initial zoom level (e.g., 2 for double zoom)
             },
             onRegionTipShow: function(e, el, code) {
                 var amount = mapData[code] !== undefined ? mapData[code] : 0; // no data defaulted to 0
