@@ -48,12 +48,14 @@ private function timeConditions($options)
         $events = $this->Event->fetchEvent($user, ['idList' => $eventIds, 'includeAllTags' => true]);
 
         $data=[];
+        $tagIds=[];
     
         # go through each event and go through tags
         foreach ($events as $event) {
             if(!empty($event['EventTag'])) {
                 foreach ($event['EventTag'] as $tagObj) {
                     $tag = $tagObj['Tag']['name'];
+                    $tagid = $tagObj['Tag']['id'];
                     # if tag contains 'misp-galaxy:mitre-attack-pattern='
                     if (str_contains(strtolower($tag),'threat-actor')){
                         $threatActor = trim(explode('"', $tag)[1]);
@@ -61,6 +63,9 @@ private function timeConditions($options)
                             $data[$threatActor] = 0;
                         }
                         $data[$threatActor] += 1;
+                        if(!isset($tagIds[$threatActor]) || !in_array($tagid, $tagIds[$threatActor])) {
+                            $tagIds[$threatActor][] = $tagid;
+                        }
                     }
                 }
             }
@@ -70,6 +75,14 @@ private function timeConditions($options)
         arsort($data);
         if ($limit != 0) {
             $data = array_slice($data,0,$limit,true);
+        }
+        $links=[];
+        foreach ($data as $thrtActor => $v) {
+            $link = '/events/index/searchextending:undefined/searchextended:undefined/searchtag:';
+            foreach($tagIds[$thrtActor] as $tg) {
+                $link = $link.$tg.'|';
+            }
+            $links[$thrtActor] = $link;
         }
 
         # calculate logarithmic values
@@ -89,54 +102,12 @@ private function timeConditions($options)
         
         $data = [
             'data' => $data,
+            'links' => $links,
             'logarithmic' => $logarithmic,
             'axis' => [
                 'y' => 'Threat Actors'
             ],
         ];
-
-        /*
-        $data = [
-            'data' => [
-                'APT28' => 150,
-                'Lazarus Group' => 120,
-                'FIN7' => 95,
-                'TA505' => 60,
-                'Charming Kitten' => 45,
-                'APT41' => 30,
-                'EvilCorp' => 20,
-                'DragonOK' => 15
-            ],
-            /*
-            'colours' => [
-                'APT28' => '#FF4C4C',       // Red
-                'Lazarus Group' => '#4C6FFF', // Blue
-                'FIN7' => '#4CFF6F',        // Green
-                'TA505' => '#FFC24C',       // Orange
-                'Charming Kitten' => '#FF4CFF', // Pink
-                'APT41' => '#8C4CFF',       // Purple
-                'EvilCorp' => '#4CFFFF',    // Cyan
-                'DragonOK' => '#AAAAAA'     // Gray
-            ],
-            
-            'logarithmic' => [
-                'APT28' => round(log10(150), 2),         // ~2.18
-                'Lazarus Group' => round(log10(120), 2), // ~2.08
-                'FIN7' => round(log10(95), 2),           // ~1.98
-                'TA505' => round(log10(60), 2),          // ~1.78
-                'Charming Kitten' => round(log10(45), 2),// ~1.65
-                'APT41' => round(log10(30), 2),          // ~1.48
-                'EvilCorp' => round(log10(20), 2),       // ~1.30
-                'DragonOK' => round(log10(15), 2)        // ~1.18
-            ],
-            
-            'axis' => [
-                'y' => 'Threat Actors'
-            ],
-            'output_decorator' => '' // leave empty if you don't need a "%" sign
-        ];
-        */
-
         return $data;
     }
 }

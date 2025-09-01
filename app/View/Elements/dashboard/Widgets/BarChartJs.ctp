@@ -7,8 +7,11 @@ echo $this->element('genericElements/assetLoader', [
 $randomNumber = rand();
 
 // Prepare labels and data
-$labels = array_keys($data['data']);
-$values = array_values($data['data']);
+$labels = json_encode(array_keys($data['data']));
+$values = json_encode(array_values($data['data']));
+if (isset($data['links'])) {
+    $links = json_encode($data['links']);
+}
 
 // Handle colors (fallback to a default color if not provided)
 $colors = !empty($data['colors']) ? $data['colors'] : '#0088cc';
@@ -33,14 +36,15 @@ if (!empty($data['logarithmic'])) {
         const ctx = document.getElementById(chartId).getContext('2d');
         Chart.defaults.font.family = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
         Chart.defaults.color = '#000000';
+        const urls = <?= $links ?>;
 
         const chart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: <?= json_encode($labels) ?>,
+                labels: <?= $labels ?>,
                 datasets: [{
                     label: 'Threat Actor Events<?= !empty($data['output_decorator']) ? ' (' . $data['output_decorator'] . ')' : '' ?>',
-                    data: <?= json_encode($values) ?>,
+                    data: <?= $values ?>,
                     backgroundColor: <?= json_encode($colors) ?>,
                     borderRadius: 6
                 }]
@@ -49,6 +53,17 @@ if (!empty($data['logarithmic'])) {
                 indexAxis: 'y', 
                 responsive: true,
                 maintainAspectRatio: false,
+                onClick: (evt, elements) => {
+                    if (elements.length > 0) {
+                        const chartElement = elements[0];
+                        const label = chart.data.labels[chartElement.index];
+                        if (urls[label]) {
+                            window.location.href = urls[label];
+                        } else {
+                            alert('No events found for ' + label);
+                        }
+                    }
+                },
                 plugins: {
                     legend: { 
                         display: false,

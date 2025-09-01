@@ -46,22 +46,30 @@ private function timeConditions($options)
         $events = $this->Event->fetchEvent($user, ['idList' => $eventIds, 'includeAllTags' => true]);
 
         $data=[];
+        $tagIds=[];
     
         # go through each event and go through tags
         foreach ($events as $event) {
             if(!empty($event['EventTag'])) {
                 foreach ($event['EventTag'] as $tagObj) {
                     $tag = $tagObj['Tag']['name'];
-                    # if tag contains 'misp-galaxy:mitre-attack-pattern='
+                    $tagid = $tagObj['Tag']['id'];
+                    # if tag contains 'attack-pattern'
                     if (str_contains(strtolower($tag),'attack-pattern')){
+                        # extract attack pattern name
                         $attackPattern = explode('"', $tag)[1];
                         if(!$includeid) {
                             $attackPattern = trim(explode('-', $attackPattern)[0]);
                         }
+                        # increment attack pattern count
                         if(!isset($data[$attackPattern])) {
                             $data[$attackPattern] = 0;
                         }
                         $data[$attackPattern] += 1;
+                        # add attack pattern tag id to tagids
+                        if(!isset($tagIds[$attackPattern]) || !in_array($tagid, $tagIds[$attackPattern])) {
+                            $tagIds[$attackPattern][] = $tagid;
+                        } 
                     }
                 }
             }
@@ -72,9 +80,18 @@ private function timeConditions($options)
         if ($limit != 0) {
             $data = array_slice($data,0,$limit,true);
         }
-
+        $links = [];
+        foreach ($data as $atkPattern => $v) {
+            $link = '/events/index/searchextending:undefined/searchextended:undefined/searchtag:';
+            foreach($tagIds[$atkPattern] as $tg) {
+                $link = $link . $tg . '|';
+            }
+            $links[$atkPattern] = $link;
+        }
+        
         $data = [
-            'data' => $data
+            'data' => $data,
+            'links' => $links
         ];
         return $data;
     }
