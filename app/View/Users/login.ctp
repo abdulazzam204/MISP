@@ -104,12 +104,6 @@
                 <div class='row-layout' style="margin-bottom: 10px;">
                     <div id="news-button" class="btn btn-small btn-inverse chosen" style="margin-right: 5px">Latest News</div>
                     <div id="events-button" class="btn btn-small btn-inverse" style="">Latest Events</div>
-                    <div id="news-settings-button" class="btn btn-small btn-inverse"
-                            style="margin-left: auto;">
-                            <i class="fas fa-cog"></i></div>
-                    <div id="event-settings-button" class="btn btn-small btn-inverse"
-                            style="margin-left: auto; display: none;">
-                            <i class="fas fa-cog"></i></div>
                 </div>
                 <div id="news-list">
                     <?php if (!empty($newsArticles) && is_array($newsArticles) && count($newsArticles) > 0): ?>
@@ -167,78 +161,12 @@
 <div class="clear" style="height: 50px;"></div>
 
 <!-- Modal for News API Settings -->
-<div id="news-settings-modal" class="modal background" style="display:none;">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>News Article Settings</h3>
-        <br>
-        <form id="news-settings-form">
-            <label style="margin-bottom: 0px;">Topics:
-                <input type="text" name="query" value="<?php echo $headlineSetting['query']; ?>"
-                    style="margin-bottom: 0px;">
-            </label>
-            <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">Keywords or
-                    phrases of topics. Also allows the use of logical operators ( e.g : +cybersecurity -stocks "cyber
-                    attacks" malware )</small></div>
-            <br>
-            <?php
-                $currentLang = $headlineSetting['language'];
-                $languages = ['ar' => 'Arabic','de' => 'German','en' => 'English','es' => 'Spanish','fr' => 'French','he' => 'Hebrew','it' => 'Italian','nl' => 'Dutch','no' => 'Norwegian','pt' => 'Portuguese','ru' => 'Russian','sv' => 'Swedish','ud' => 'Urdu','zh' => 'Chinese'];
-            ?>
-            <label style="margin-bottom: 0px;">Language:
-                <select name="language">
-                    <?php foreach ($languages as $code => $name): ?>
-                        <option value="<?php echo h($code); ?>" <?php echo ($code === $currentLang) ? 'selected' : ''; ?>>
-                            <?php echo h($name); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
-            <br>
-            <label>Sort By:
-                <?php $currentSort = $headlineSetting['sortBy']; ?>
-                <select name="sortBy">
-                    <option value="publishedAt" <?php echo $currentSort === 'publishedAt' ? 'selected' : ''; ?>>Published At</option>
-                    <option value="relevancy" <?php echo $currentSort === 'relevancy' ? 'selected' : ''; ?>>Relevancy
-                    </option>
-                    <option value="popularity" <?php echo $currentSort === 'popularity' ? 'selected' : ''; ?>>Popularity
-                    </option>
-                </select>
-            </label><br>
-            <label>Page Size:
-                <input type="number" name="pageSize" value="10">
-            </label><br>
-            <label style="margin-bottom: 0px;">Domains:
-                <input type="text" name="includeDomains" placeholder="example.com,another.com"
-                    value='<?php echo $headlineSetting['includeDomains']; ?>' style="margin-bottom: 0px;">
-            </label>
-            <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">A
-                    comma-seperated string of news domains (eg bbc.co.uk, techcrunch.com, engadget.com) to restrict the
-                    search to</small></div>
-            <br>
-            <label style="margin-bottom: 0px;">Exclude Domains:
-                <input type="text" name="excludeDomains" placeholder="spam.com,irrelevant.com"
-                    value='<?php echo $headlineSetting['excludeDomains']; ?>' style="margin-bottom: 0px;">
-            </label>
-            <div class="light-gray" style="margin-top: 0px; padding=0px"><small style="margin-top: 0px;">A
-                    comma-seperated string of domains (eg bbc.co.uk, techcrunch.com, engadget.com) to remove from the
-                    results.</small></div>
-            <br>
-            <button type="submit" class="btn btn-small btn-inverse">Save</button>
-        </form>
-    </div>
-</div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var btnEvents = document.getElementById("events-button");
         var btnNews = document.getElementById("news-button");
         var newsList = document.getElementById("news-list");
         var eventsList = document.getElementById("events-list");
-
-        var modal = document.getElementById("news-settings-modal");
-        var btnNewsSetting = document.getElementById("news-settings-button");
-        var btnEventSetting = document.getElementById("event-settings-button");
-        var span = document.getElementsByClassName("close")[0];
 
         btnEvents.onclick = function () {
             newsList.style.display = "none";
@@ -257,44 +185,6 @@
             btnEventSetting.style.display = "none";
             btnNewsSetting.style.display = "block";
         }
-
-        btnNewsSetting.onclick = function () {
-            modal.style.display = "block";
-        }
-
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        document.getElementById('news-settings-form').onsubmit = function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            fetch('/news_headlines/saveSettings', {
-                method: 'POST',
-                body: formData,
-                credentials: 'same-origin'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Settings saved!');
-                    modal.style.display = "none";
-                    location.reload(); // Optionally reload to apply new settings
-                } else {
-                    alert('Failed to save settings: ' + (data.error || 'Unknown error'));
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while saving settings.');
-            });
-        };
-
     });
 </script>
 

@@ -6633,7 +6633,71 @@ class Server extends AppModel
                     'test' => 'testBool',
                     'type' => 'boolean',
                     'null' => true,
+                ],
+                'news_headline_newsapi_key' => [
+                    'level' => 1,
+                    'description' => __('NewsAPI key to fetch news for news headlines.'),
+                    'value' => '7a8d5d4fccb94debb98be099d377cbdb',
+                    'type' => 'string'
+                ],
+                'news_headline_query' => [
+                    'level' => 1,
+                    'description' => __('Query used for the news headlines. AND/OR are supported. Use + to specify a required keyword and - to blacklist keywords.'),
+                    'value' => '+cybersecurity malware OR threat',
+                    'type' => 'string'
+                ],
+                'news_headline_language' => [
+                    'level' => 1,
+                    'description' => __('The language you want the news headline in.'),
+                    'value' => 'en',
+                    'type' => 'string',
+                    'options' => [
+                        'ar' => __('Arabic'),
+                        'de' => __('German'),
+                        'en' => __('English'),
+                        'es' => __('Spanish'),
+                        'fr' => __('French'),
+                        'he' => __('Hebrew'),
+                        'it' => __('Italian'),
+                        'nl' => __('Dutch'),
+                        'no' => __('Norwegian'),
+                        'pt' => __('Portugese'),
+                        'ru' => __('Russian'),
+                        'sv' => __('Swedish'),
+                        'ud' => __('Urdi'),
+                        'zh' => __('Chinese'),
+                    ]
+                ],
+                'news_headline_sort_by' => [
+                    'level' => 1,
+                    'description' => __('How to sort the news headline.'),
+                    'value' => 'publishedAt',
+                    'type' => 'string',
+                    'options' => [
+                        'relevancy' => __('Relevancy'),
+                        'popularity' => __('Popularity'),
+                        'publishedAt' => __('Published At'),
+                    ]
+                ],
+                'news_headline_limit' => [
+                    'level' => 1,
+                    'description' => __('How many news headline should be displayed.'),
+                    'value' => 10,
+                    'type' => 'numeric'
+                ],
+                'news_headline_include_domains' => [
+                    'level' => 1,
+                    'description' => __('A comma-seperated string of news domains (eg bbc.co.uk, techcrunch.com, engadget.com) to restrict the search to.'),
+                    'value' => '',
+                    'type' => 'string',
+                ],
+                'news_headline_exclude_domains' => [
+                    'level' => 1,
+                    'description' => __('A comma-seperated string of news domains (eg bbc.co.uk, techcrunch.com, engadget.com) to remove from the headlines.'),
+                    'value' => 'businessinsider.com',
+                    'type' => 'string',
                 ]
+
             ),
             'GnuPG' => array(
                 'branch' => 1,

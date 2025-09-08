@@ -1222,9 +1222,9 @@ class UsersController extends AppController
 
         // load news config
         //require APP . 'Config' . DS . 'headline.php';
-        $headlineCfg = new HeadlineConfig();
-        $headlineSetting = $headlineCfg->headlineConfig;
-        $this->set('headlineSetting', $headlineSetting);
+        //$headlineCfg = new HeadlineConfig();
+        //$headlineSetting = $headlineCfg->headlineConfig;
+        //$this->set('headlineSetting', $headlineSetting);
 
         // load event headlines
         $this->loadModel('Event');
