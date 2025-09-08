@@ -55,9 +55,6 @@ class ASEANEventsMapWidget {
         ];
         $eventIds = $this->Event->filterEventIds($user, $params);
         $events = $this->Event->fetchEvent($user, ['idList' => $eventIds, 'includeAllTags' => true]);
-        //$events = $this->Event->fetchEvent($user, ['eventid' => 1799]);
-        //$events = $this->Event->fetchEvent($user, ['tags' => '!osint:source-type="block-or-filter-list"', 'includeAllTags' => true]);
-        //echo print_r($events);
         # initialize data array
         $data = [];
         foreach ($this->allowedTagsCountryCode as $country) {
