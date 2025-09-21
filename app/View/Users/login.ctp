@@ -160,7 +160,6 @@
 </div>
 <div class="clear" style="height: 50px;"></div>
 
-<!-- Modal for News API Settings -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var btnEvents = document.getElementById("events-button");
