@@ -80,6 +80,7 @@ private function timeConditions($options)
         if ($limit != 0) {
             $data = array_slice($data,0,$limit,true);
         }
+        # links for interactivity
         $links = [];
         foreach ($data as $atkPattern => $v) {
             $link = '/events/index/searchextending:undefined/searchextended:undefined/searchtag:';

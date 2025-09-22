@@ -1220,12 +1220,6 @@ class UsersController extends AppController
         $newsArticles = $this->Headline->fetchHeadlines();
         $this->set('newsArticles', $newsArticles);
 
-        // load news config
-        //require APP . 'Config' . DS . 'headline.php';
-        //$headlineCfg = new HeadlineConfig();
-        //$headlineSetting = $headlineCfg->headlineConfig;
-        //$this->set('headlineSetting', $headlineSetting);
-
         // load event headlines
         $this->loadModel('Event');
         $eventHeadlines = $this->Event->find('all', [
@@ -1380,7 +1374,7 @@ class UsersController extends AppController
             if (!empty($homepage)) {
                 $url = $homepage['path'];
             } else {
-                $url = array('controller' => 'events', 'action' => 'index');
+                $url = array('controller' => 'dashboards', 'action' => 'index');
             }
         }
         $this->redirect($url);

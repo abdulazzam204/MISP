@@ -60,7 +60,7 @@ if (empty($data['colour_scale'])) {
                 regions: [{
                     values: mapData,
                     scale:
-                        <?= $data['colour_scale'] ?>, //  gradient blue->green->yellow->red
+                        <?= $data['colour_scale'] ?>, 
                     normalizeFunction: 'polynomial',
                     legend: {
                         vertical: false,
@@ -76,7 +76,7 @@ if (empty($data['colour_scale'])) {
                 scale: 3.5 // Initial zoom level (e.g., 2 for double zoom)
             },
             onRegionTipShow: function (e, el, code) {
-                var amount = mapData[code] !== undefined ? mapData[code] : 0; // no data defaulted to 0
+                var amount = mapData[code] !== undefined ? mapData[code] : 0;
                 el.html(el.html() + ' (' + scope + ' - ' + amount + ')');
             },
             onRegionClick: function (event, code) {
