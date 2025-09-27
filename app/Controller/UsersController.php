@@ -1223,7 +1223,7 @@ class UsersController extends AppController
         // load event headlines
         $this->loadModel('Event');
         $eventHeadlines = $this->Event->find('all', [
-            'conditions' => ['Event.published' => 1],
+            'conditions' => ['Event.published' => 1, 'Event.distribution' => 3],
             'order' => ['Event.date' => 'DESC'],
             'limit' => 10,
             'fields' => ['Event.info', 'Event.threat_level_id', 'Event.date']

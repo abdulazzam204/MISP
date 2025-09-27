@@ -40,7 +40,7 @@
                 if ($formLoginEnabled):
                     echo $this->Form->create('User');
                     ?>
-                    <legend><?php echo __('Login'); ?></legend>
+                    <br>
                     <?php
                     echo $this->Form->input('email', array('autocomplete' => 'off', 'autofocus'));
                     echo $this->Form->input('password', array('autocomplete' => 'off'));

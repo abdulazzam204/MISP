@@ -18,7 +18,8 @@ $colors = !empty($data['colors']) ? $data['colors'] : '#0088cc';
 
 // Handle logarithmic option
 if (!empty($data['logarithmic'])) {
-    $values = array_values($data['logarithmic']);
+    $values = json_encode(array_values($data['logarithmic']));
+    
 } elseif (!empty($config['widget_config']['forceLogarithm'])) {
     $values = array_map(function ($v) {
         return $v == 1 ? 0.1 : log10($v);
